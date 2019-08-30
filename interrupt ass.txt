@@ -1,0 +1,63 @@
+
+
+#include "../LIB/std_types.h"
+
+#include "../MCAL/DIO/DIO.h"
+#include "../MCAL/EXTI/EXTI.h"
+#include "../MCAL/GIE/GIE.h"
+#include "../HAL/LCD/LCD.h"
+#include <util/delay.h>
+
+void EXTI_ISR(void);
+uint8 flag=0;
+void EXTI_Lab(void)
+{
+
+	DIO_SetPortDirection(PORTA,DIO_Output);
+	DIO_SetPortDirection(PORTB,DIO_Output);
+    LCD_Initialize();
+	EXTI_Initialization();
+	EXTI_SetCallback(EXTI_ISR);
+
+	/* Enable PIE for INT0 */
+	EXTI_EnableInt0();
+	/* Enable global interrupt */
+	GIE_Enable();
+
+
+
+	while(1)
+	{
+		LCD_WriteString("AHMED", 0, 0);
+		_delay_ms(500);
+		LCD_WriteCmd(0X01);
+
+		LCD_WriteString("AHMED", 1, 6);
+				_delay_ms(500);
+				LCD_WriteCmd(0X01);
+				LCD_WriteString("AHMED", 0, 9);
+								_delay_ms(500);
+								LCD_WriteCmd(0X01);
+								if(flag==1){
+
+									LCD_WriteString("AHMED", 0, 0);
+									_delay_ms(500);
+									LCD_WriteCmd(0X01);
+									LCD_WriteString("AHMED", 0, 5);
+										_delay_ms(500);
+										LCD_WriteCmd(0X01);
+										LCD_WriteString("AHMED", 0, 10);
+																				_delay_ms(500);
+																				LCD_WriteCmd(0X01);
+									flag=0;
+
+								}
+
+
+	}
+}
+
+void EXTI_ISR(void)
+{
+flag=1;
+}
